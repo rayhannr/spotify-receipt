@@ -1,13 +1,13 @@
 import { useEffect } from 'react'
-import { authorize, exchangeToken } from './utils/auth'
-import { useAtom, useAtomValue } from 'jotai'
+import { exchangeToken } from './utils/auth'
+import { useAtomValue, useSetAtom } from 'jotai'
 import { tokenAtom, userAtom } from './store'
 import { getCurrentUser } from './utils/api'
-import { Button } from './components/ui/button'
+import { Receipt } from './components/Receipt'
 
 function App() {
   const token = useAtomValue(tokenAtom)
-  const [user, setUser] = useAtom(userAtom)
+  const setUser = useSetAtom(userAtom)
 
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search)
@@ -21,7 +21,7 @@ function App() {
     getCurrentUser().then(setUser)
   }, [])
 
-  return <Button onClick={authorize}>login to spotify</Button>
+  return <Receipt />
 }
 
 export default App
