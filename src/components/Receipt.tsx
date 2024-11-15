@@ -9,7 +9,7 @@ export const Receipt = () => {
   const user = useAtomValue(userAtom)
 
   return (
-    <div className="w-full sm:w-3/4 lg:w-1/2 mx-auto py-8 md:py-10 lg:py-12">
+    <div className="w-full sm:w-3/4 lg:w-2/3 mx-auto px-4 sm:px-0 py-8 md:py-10 lg:py-12">
       {!user && (
         <div className="text-center">
           <Title />
