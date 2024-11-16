@@ -1,8 +1,14 @@
 import { createStore } from 'jotai'
 import { atomWithStorage } from 'jotai/utils'
-import { Token, User } from './models'
+import { AccessToken, UserProfile } from '@spotify/web-api-ts-sdk'
 
 export const store = createStore()
 
-export const tokenAtom = atomWithStorage<Token | null>('sporeceipt-token', null, undefined, { getOnInit: true })
-export const userAtom = atomWithStorage<User | null>('sporeceipt-user', null, undefined, { getOnInit: true })
+export const StorageKey = {
+  token: 'sporeceipt-token',
+  user: 'sporeceipt-user',
+  verifier: 'spotify-sdk:verifier',
+}
+
+export const tokenAtom = atomWithStorage<AccessToken | null>(StorageKey.token, null, undefined, { getOnInit: true })
+export const userAtom = atomWithStorage<UserProfile | null>(StorageKey.user, null, undefined, { getOnInit: true })

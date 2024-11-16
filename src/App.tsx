@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
-import { exchangeToken } from './utils/auth'
 import { useAtomValue, useSetAtom } from 'jotai'
+import { exchangeToken } from './utils/auth'
 import { tokenAtom, userAtom } from './store'
 import { getCurrentUser } from './utils/api'
 import { Receipt } from './components/Receipt'
@@ -9,16 +9,20 @@ function App() {
   const token = useAtomValue(tokenAtom)
   const setUser = useSetAtom(userAtom)
 
+  const getUser = () => {
+    getCurrentUser().then(setUser)
+  }
+
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search)
     const code = urlParams.get('code') || ''
 
     if (token || !code) return
-    exchangeToken(code)
-  }, [token])
+    exchangeToken().then(getUser)
+  }, [])
 
   useEffect(() => {
-    getCurrentUser().then(setUser)
+    getUser()
   }, [])
 
   return <Receipt />

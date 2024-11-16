@@ -15,9 +15,15 @@ const PeriodOptions = [
   { label: 'Last Year', value: 'long_term' },
 ]
 
+const LimitOptions = [
+  { label: 'Top 10', value: '10' },
+  { label: 'Top 50', value: '50' },
+]
+
 export const ReceiptGenerator = () => {
   const [metric, setMetric] = useState(MetricOptions[0].value)
   const [period, setPeriod] = useState(PeriodOptions[0].value)
+  const [limit, setLimit] = useState(LimitOptions[0].value)
 
   return (
     <div className="w-full lg:w-5/12 mt-4">
@@ -36,8 +42,19 @@ export const ReceiptGenerator = () => {
 
         <label>Time Period</label>
         <Tabs value={period} onValueChange={setPeriod} orientation="vertical">
-          <TabsList className="grid w-full grid-cols-3">
+          <TabsList className="grid grid-cols-3 mb-6">
             {PeriodOptions.map((option) => (
+              <TabsTrigger value={option.value} key={option.value}>
+                {option.label}
+              </TabsTrigger>
+            ))}
+          </TabsList>
+        </Tabs>
+
+        <label>Length</label>
+        <Tabs value={limit} onValueChange={setLimit}>
+          <TabsList className="grid grid-cols-2">
+            {LimitOptions.map((option) => (
               <TabsTrigger value={option.value} key={option.value}>
                 {option.label}
               </TabsTrigger>

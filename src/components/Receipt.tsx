@@ -1,8 +1,8 @@
-import { userAtom } from '@/store'
 import { useAtomValue } from 'jotai'
+import { userAtom } from '@/store'
+import { logout } from '@/utils/auth'
 import { Title } from './Title'
 import { Button } from './ui/button'
-import { removeSession } from '@/utils/session'
 import { ReceiptGenerator } from './ReceiptGenerator'
 
 export const Receipt = () => {
@@ -18,9 +18,12 @@ export const Receipt = () => {
 
       {user && (
         <>
-          <h1 className="scroll-m-20 text-3xl font-bold tracking-tight">Hi, {user.display_name}</h1>
+          <h1 className="scroll-m-20 text-3xl font-bold tracking-tight flex gap-2 items-center">
+            <img src={user.images[0].url} className="w-7 h-7 rounded-[50%]" />
+            Hi, {user.display_name}
+          </h1>
           <span className="text-muted-foreground">Not you?</span>{' '}
-          <Button variant="link" onClick={removeSession} className="px-0">
+          <Button variant="link" onClick={logout} className="p-0 h-auto">
             Logout
           </Button>
           <ReceiptGenerator />
