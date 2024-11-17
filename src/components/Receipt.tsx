@@ -26,7 +26,12 @@ export const Receipt = () => {
           <Button variant="link" onClick={logout} className="p-0 h-auto">
             Logout
           </Button>
-          <ReceiptGenerator />
+          <div className="flex flex-wrap gap-6 mt-4">
+            <div className="w-full lg:w-5/12">
+              <ReceiptGenerator />
+            </div>
+            <div className="w-full lg:w-auto flex-1">koeko</div>
+          </div>
         </>
       )}
     </div>
