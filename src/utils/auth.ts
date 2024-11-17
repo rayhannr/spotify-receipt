@@ -1,12 +1,9 @@
 import { SpotifyApi } from '@spotify/web-api-ts-sdk'
 import { Env } from '../constants/env'
-import { StorageKey, store, tokenAtom, userAtom } from '../store'
+import { StorageKey, store, userAtom } from '../store'
 import { scopes, sdk } from './api'
 
-export const authorize = () =>
-  SpotifyApi.performUserAuthorization(Env.clientId, Env.redirectUri, scopes, async (accessToken) => {
-    store.set(tokenAtom, accessToken)
-  })
+export const authorize = () => SpotifyApi.performUserAuthorization(Env.clientId, Env.redirectUri, scopes, async () => {})
 
 export const exchangeToken = async () => {
   const codeVerifier = localStorage.getItem(StorageKey.verifier)
@@ -17,6 +14,5 @@ export const exchangeToken = async () => {
 
 export const logout = () => {
   sdk.logOut()
-  store.set(tokenAtom, null)
   store.set(userAtom, null)
 }

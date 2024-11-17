@@ -4,12 +4,13 @@ import { logout } from '@/utils/auth'
 import { Title } from './Title'
 import { Button } from './ui/button'
 import { ReceiptGenerator } from './ReceiptGenerator'
+import { ReceiptImage } from './ReceiptImage'
 
 export const Receipt = () => {
   const user = useAtomValue(userAtom)
 
   return (
-    <div className="w-full sm:w-3/4 lg:w-2/3 mx-auto px-4 sm:px-0 py-8 md:py-10 lg:py-12">
+    <main className="w-full sm:w-3/4 lg:w-2/3 mx-auto px-4 sm:px-0 py-8 md:py-10 lg:py-12">
       {!user && (
         <div className="text-center">
           <Title />
@@ -26,14 +27,16 @@ export const Receipt = () => {
           <Button variant="link" onClick={logout} className="p-0 h-auto">
             Logout
           </Button>
-          <div className="flex flex-wrap gap-6 mt-4">
+          <section className="flex flex-wrap gap-6 mt-4">
             <div className="w-full lg:w-5/12">
               <ReceiptGenerator />
             </div>
-            <div className="w-full lg:w-auto flex-1">koeko</div>
-          </div>
+            <div className="w-full lg:w-auto flex-1 flex justify-center">
+              <ReceiptImage />
+            </div>
+          </section>
         </>
       )}
-    </div>
+    </main>
   )
 }

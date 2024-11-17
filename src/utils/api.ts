@@ -20,19 +20,21 @@ export const queryClient = new QueryClient({
 export interface ReceiptData {
   name: string
   amount: string
+  link?: string
 }
 
 type TopItems = Parameters<CurrentUserEndpoints['topItems']>
 
-export const useTopItems = (params: TopItems, options?: UseQueryOptions) => {
+export const useTopItems = (params: TopItems, options?: UseQueryOptions<ReceiptData[]>) => {
   const queryFn = () => async () => {
     const topItems = await sdk.currentUser.topItems(...params)
     const receipts: ReceiptData[] = []
 
     topItems.items.forEach((item) => {
       receipts.push({
-        name: item.name,
+        name: isArtist(item) ? item.name : `${item.name} - ${item.artists.map((artist) => artist.name).join(', ')}`,
         amount: isArtist(item) ? item.popularity.toString() : formatDuration(item.duration_ms),
+        link: item.external_urls.spotify,
       })
     })
 
@@ -47,7 +49,7 @@ export const useTopItems = (params: TopItems, options?: UseQueryOptions) => {
 }
 
 export type TimeRange = TopItems[1]
-export const useTopGenres = (timeRange: TimeRange, options?: UseQueryOptions) => {
+export const useTopGenres = (timeRange: TimeRange, options?: UseQueryOptions<ReceiptData[]>) => {
   const queryFn = () => async () => {
     const topGenres = await sdk.currentUser.topItems('artists', timeRange, 50)
     const receipts: ReceiptData[] = []

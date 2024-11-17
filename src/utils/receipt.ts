@@ -17,7 +17,7 @@ export const formatDuration = (ms: number) => {
   return `${minutes}:${formattedSeconds}`
 }
 
-export const calculateTotalDuration = (durations: string[]) => {
+export const getTotalDuration = (durations: string[]) => {
   const totalMilliseconds = durations.map(parseDuration).reduce((acc, curr) => acc + curr, 0)
   return formatDuration(totalMilliseconds)
 }
@@ -26,3 +26,5 @@ export const getPercentage = (value: number, total: number) => {
   const percentage = (value / total) * 100
   return `${percentage.toFixed(2)}%`
 }
+
+export const getRandomNumber = (max: number) => Math.floor(Math.random() * max) + 1

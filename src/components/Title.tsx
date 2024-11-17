@@ -3,7 +3,7 @@ import { Button } from './ui/button'
 
 export const Title = () => (
   <>
-    <h1 className="text-3xl font-bold leading-tight tracking-tighter md:text-4xl lg:leading-[1.1]">Sporeceipt</h1>
+    <h1 className="text-3xl font-bold leading-tight tracking-tighter md:text-4xl lg:leading-[1.1]">Spoticeipt</h1>
     <p className="text-lg font-light text-foreground mb-3">Spotify top track receipt generator</p>
     <Button onClick={authorize}>
       <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">

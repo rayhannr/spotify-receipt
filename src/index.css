@@ -5,6 +5,12 @@
 @tailwind components;
 @tailwind utilities;
 
+@font-face {
+  font-family: 'Merchant Copy';
+  src: url('./assets/Merchant_Copy.ttf') format('truetype');
+  size-adjust: 115%;
+}
+
 @layer base {
   :root {
     --background: 0 0% 100%;
@@ -102,4 +108,9 @@
     font-family: 'Geist', sans-serif;
     font-feature-settings: 'rlig' 1, 'calt' 1;
   }
+}
+
+td {
+  padding: 2px 10px;
+  vertical-align: top;
 }

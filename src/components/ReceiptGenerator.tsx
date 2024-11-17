@@ -1,13 +1,13 @@
 import { useAtom } from 'jotai'
-import { limitAtom, metricAtom, useIsArtistOrTrack } from '@/store'
+import { limitAtom, metricAtom, periodAtom, useIsArtistOrTrack } from '@/store'
+import { LimitOptions, MetricOptions, PeriodOptions } from '@/constants/receipt'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select'
 import { Tabs, TabsList, TabsTrigger } from './ui/tabs'
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from './ui/accordion'
-import { LimitOptions, MetricOptions, PeriodOptions } from '@/constants/receipt'
 
 export const ReceiptGenerator = () => {
   const [metric, setMetric] = useAtom(metricAtom)
-  const [period, setPeriod] = useAtom(metricAtom)
+  const [period, setPeriod] = useAtom(periodAtom)
   const [limit, setLimit] = useAtom(limitAtom)
   const isArtistOrTrack = useIsArtistOrTrack()
 
