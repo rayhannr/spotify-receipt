@@ -4,7 +4,7 @@ import { MaxInt } from '@spotify/web-api-ts-sdk'
 import { MetricOptions, Metrics, PeriodOptions } from '@/constants/receipt'
 import { limitAtom, metricAtom, periodAtom, useIsArtistOrTrack, userAtom } from '@/store'
 import { TimeRange, useTopGenres, useTopItems } from '@/utils/api'
-import { getRandomNumber, getTotalDuration } from '@/utils/receipt'
+import { getRandomNumber, getTotalDuration, getTotalPercentage } from '@/utils/receipt'
 import receiptBg from '@/assets/receipt.webp'
 import barcode from '@/assets/barcode.svg'
 import { Env } from '@/constants/env'
@@ -33,9 +33,12 @@ export const ReceiptImage = () => {
   const getTotal = () => {
     if (!receiptItems) return 0
 
+    const amounts = receiptItems.map((item) => item.amount)
     switch (metric) {
       case Metrics.tracks:
-        return getTotalDuration(receiptItems.map((item) => item.amount))
+        return getTotalDuration(amounts)
+      case Metrics.genres:
+        return getTotalPercentage(amounts)
       default:
         return receiptItems.reduce((acc, curr) => acc + +curr.amount, 0)
     }

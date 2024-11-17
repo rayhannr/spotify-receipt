@@ -27,4 +27,11 @@ export const getPercentage = (value: number, total: number) => {
   return `${percentage.toFixed(2)}%`
 }
 
+const parsePercentage = (percent: string) => +percent.replace('%', '')
+
+export const getTotalPercentage = (percentages: string[]) => {
+  const totalPercentage = percentages.map(parsePercentage).reduce((acc, curr) => acc + curr, 0)
+  return totalPercentage.toFixed(2)
+}
+
 export const getRandomNumber = (max: number) => Math.floor(Math.random() * max) + 1
