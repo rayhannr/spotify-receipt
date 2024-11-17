@@ -2,7 +2,7 @@ import { useEffect } from 'react'
 import { useAtomValue, useSetAtom } from 'jotai'
 import { exchangeToken } from './utils/auth'
 import { tokenAtom, userAtom } from './store'
-import { getCurrentUser } from './utils/api'
+import { sdk } from './utils/api'
 import { Receipt } from './components/Receipt'
 
 function App() {
@@ -10,7 +10,7 @@ function App() {
   const setUser = useSetAtom(userAtom)
 
   const getUser = () => {
-    getCurrentUser().then(setUser)
+    sdk.currentUser.profile().then(setUser)
   }
 
   useEffect(() => {
