@@ -1,9 +1,10 @@
 import { useMemo } from 'react'
 import { useAtomValue } from 'jotai'
+import { twMerge } from 'tailwind-merge'
 import { MaxInt } from '@spotify/web-api-ts-sdk'
-import { MetricOptions, Metrics, PeriodOptions } from '@/constants/receipt'
+import { METRIC_OPTIONS, Metrics, PERIOD_OPTIONS } from '@/constants/receipt'
 import { limitAtom, metricAtom, periodAtom, useIsArtistOrTrack, userAtom } from '@/store'
-import { TimeRange, useTopGenres, useTopItems } from '@/utils/api'
+import { TimeRange, useStats, useTopGenres, useTopItems } from '@/utils/api'
 import { getRandomNumber, getTotalDuration, getTotalPercentage } from '@/utils/receipt'
 import receiptBg from '@/assets/receipt.webp'
 import barcode from '@/assets/barcode.svg'
@@ -15,20 +16,25 @@ export const ReceiptImage = () => {
   const period = useAtomValue(periodAtom)
   const limit = useAtomValue(limitAtom)
   const isArtistOrTrack = useIsArtistOrTrack()
+  const isStat = metric === Metrics.stats
 
-  const metricLabel = MetricOptions.find((option) => option.value === metric)?.label
-  const periodLabel = PeriodOptions.find((option) => option.value === period)?.label
+  const metricLabel = METRIC_OPTIONS.find((option) => option.value === metric)?.label
+  const periodLabel = PERIOD_OPTIONS.find((option) => option.value === period)?.label
 
   const topItems = useTopItems([metric === Metrics.tracks ? 'tracks' : 'artists', period as TimeRange, +limit as MaxInt<50>], {
     enabled: isArtistOrTrack,
   })
   const topGenres = useTopGenres(period as TimeRange, { enabled: metric === Metrics.genres })
+  const stats = useStats(period as TimeRange, { enabled: metric === Metrics.stats })
 
   const receiptItems = useMemo(() => {
     if (isArtistOrTrack) return topItems.data
-    return topGenres.data
-  }, [topItems.data, topGenres.data])
+    return metric === Metrics.genres ? topGenres.data : stats.data
+  }, [topItems.data, topGenres.data, stats.data])
   const date = useMemo(() => new Date(), [receiptItems])
+
+  const leftColumnClass = twMerge('pl-0', isStat ? 'w-3/5' : 'w-3/4')
+  const rightColumnClass = twMerge('text-right pr-0', isStat ? 'w-2/5' : 'w-1/4')
 
   const getTotal = () => {
     if (!receiptItems) return 0
@@ -40,7 +46,7 @@ export const ReceiptImage = () => {
       case Metrics.genres:
         return getTotalPercentage(amounts)
       default:
-        return receiptItems.reduce((acc, curr) => acc + +curr.amount, 0)
+        return receiptItems.reduce((acc, curr) => acc + +curr.amount.replace(/[^0-9.,]/g, ''), 0).toFixed(2)
     }
   }
 
@@ -76,19 +82,19 @@ export const ReceiptImage = () => {
       <table className="w-full mb-1">
         <thead>
           <tr className="text-neutral-900 leading-5">
-            <td className="w-4/5 pl-0">item description</td>
-            <td className="w-1/5 text-right pr-0">amt</td>
+            <td className={leftColumnClass}>item description</td>
+            <td className={rightColumnClass}>amt</td>
           </tr>
         </thead>
         <tbody>
           {receiptItems?.map((item) => (
             <tr key={item.name} className="leading-4">
-              <td className="w-4/5 pl-0">
+              <td className={twMerge(leftColumnClass, 'pb-1')}>
                 <a href={item.link} target="_blank" rel="noreferrer">
                   {item.name}
                 </a>
               </td>
-              <td className="w-1/5 text-right pr-0">{item.amount}</td>
+              <td className={rightColumnClass}>{item.amount}</td>
             </tr>
           ))}
         </tbody>

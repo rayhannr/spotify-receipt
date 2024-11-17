@@ -2,7 +2,8 @@ import { Artist, SpotifyApi } from '@spotify/web-api-ts-sdk'
 import { Env } from '@/constants/env'
 import { QueryClient, useQuery, UseQueryOptions } from 'react-query'
 import CurrentUserEndpoints from 'node_modules/@spotify/web-api-ts-sdk/dist/mjs/endpoints/CurrentUserEndpoints'
-import { formatDuration, getPercentage, isArtist } from './receipt'
+import { formatDuration, getAverage, getAverageFeature, getPercentage, getYearDifference, isArtist } from './receipt'
+import { FEATURE_ITEMS } from '@/constants/receipt'
 
 export const scopes = ['user-read-private', 'user-read-email', 'user-top-read']
 export const sdk = SpotifyApi.withUserAuthorization(Env.clientId, Env.redirectUri, scopes)
@@ -26,7 +27,7 @@ export interface ReceiptData {
 type TopItems = Parameters<CurrentUserEndpoints['topItems']>
 
 export const useTopItems = (params: TopItems, options?: UseQueryOptions<ReceiptData[]>) => {
-  const queryFn = () => async () => {
+  const queryFn = async () => {
     const topItems = await sdk.currentUser.topItems(...params)
     const receipts: ReceiptData[] = []
 
@@ -43,14 +44,14 @@ export const useTopItems = (params: TopItems, options?: UseQueryOptions<ReceiptD
 
   return useQuery({
     queryKey: ['topItems', params],
-    queryFn: queryFn(),
+    queryFn,
     ...options,
   })
 }
 
 export type TimeRange = TopItems[1]
 export const useTopGenres = (timeRange: TimeRange, options?: UseQueryOptions<ReceiptData[]>) => {
-  const queryFn = () => async () => {
+  const queryFn = async () => {
     const topGenres = await sdk.currentUser.topItems('artists', timeRange, 50)
     const receipts: ReceiptData[] = []
     const genres: Record<string, number> = {}
@@ -81,7 +82,55 @@ export const useTopGenres = (timeRange: TimeRange, options?: UseQueryOptions<Rec
 
   return useQuery({
     queryKey: ['topGenres', timeRange],
-    queryFn: queryFn(),
+    queryFn,
+    ...options,
+  })
+}
+
+export const useStats = (timeRange: TimeRange, options?: UseQueryOptions<ReceiptData[]>) => {
+  const queryFn = async () => {
+    const receipts: ReceiptData[] = []
+
+    const topTracks = await sdk.currentUser.topItems('tracks', timeRange, 50)
+    const trackIds = topTracks.items.map((item) => item.id)
+    const [audioFeatures, topArtists] = await Promise.allSettled([
+      sdk.tracks.audioFeatures(trackIds),
+      sdk.currentUser.topItems('artists', timeRange, 50),
+    ])
+
+    if (topArtists.status === 'fulfilled') {
+      const popularities = topArtists.value.items.map((item) => item.popularity)
+      const avgPopularities = getAverage(popularities)
+
+      receipts.push({
+        name: 'popularity score',
+        amount: avgPopularities,
+      })
+    }
+
+    const now = new Date()
+    const trackAges = topTracks.items.map((item) => getYearDifference(now, new Date(item.album.release_date)))
+    const avgTrackAge = getAverage(trackAges)
+    receipts.push({
+      name: 'average track age',
+      amount: `${avgTrackAge} yrs`,
+    })
+
+    if (audioFeatures.status === 'fulfilled') {
+      const { value } = audioFeatures
+      const stats: ReceiptData[] = FEATURE_ITEMS.map(({ key, percent, name, unit }) => {
+        const average = getAverageFeature(value, key, percent)
+        return { name: name || key, amount: average + (unit ? ` ${unit}` : '') }
+      })
+      receipts.push(...stats)
+    }
+
+    return receipts
+  }
+
+  return useQuery({
+    queryKey: ['stats', timeRange],
+    queryFn,
     ...options,
   })
 }

@@ -1,4 +1,4 @@
-import { Artist, Track } from '@spotify/web-api-ts-sdk'
+import { Artist, AudioFeatures, Track } from '@spotify/web-api-ts-sdk'
 
 export const isArtist = (item: Artist | Track): item is Artist => item.type === 'artist'
 
@@ -35,3 +35,14 @@ export const getTotalPercentage = (percentages: string[]) => {
 }
 
 export const getRandomNumber = (max: number) => Math.floor(Math.random() * max) + 1
+
+export const getYearDifference = (date1: Date, date2: Date) => {
+  const diffInMilliseconds = Math.abs(date2.getTime() - date1.getTime())
+  const millisecondsInYear = 1000 * 60 * 60 * 24 * 365.25
+  return diffInMilliseconds / millisecondsInYear
+}
+
+export const getAverage = (values: number[]) => (values.reduce((acc, curr) => acc + curr, 0) / values.length).toFixed(2)
+
+export const getAverageFeature = (features: AudioFeatures[], key: keyof AudioFeatures, percent?: boolean) =>
+  getAverage(features.map((feature) => (percent ? +feature[key] * 100 : +feature[key])))
