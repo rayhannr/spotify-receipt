@@ -5,6 +5,7 @@ export const Metrics = {
   artists: 'artists',
   genres: 'genres',
   stats: 'stats',
+  album: 'album',
 }
 
 export const METRIC_OPTIONS = [
@@ -12,18 +13,19 @@ export const METRIC_OPTIONS = [
   { label: 'Top Artists', value: Metrics.artists },
   { label: 'Top Genres', value: Metrics.genres },
   { label: 'Stats', value: Metrics.stats },
+  { label: 'Search Album', value: Metrics.album },
 ]
 
-const Period = {
+const TimeRange = {
   short_term: 'short_term',
   medium_term: 'medium_term',
   long_term: 'long_term',
 }
 
-export const PERIOD_OPTIONS = [
-  { label: 'Last Month', value: Period.short_term },
-  { label: 'Last 6 Months', value: Period.medium_term },
-  { label: 'Last Year', value: Period.long_term },
+export const TIME_RANGE_OPTIONS = [
+  { label: 'Last Month', value: TimeRange.short_term },
+  { label: 'Last 6 Months', value: TimeRange.medium_term },
+  { label: 'Last Year', value: TimeRange.long_term },
 ]
 
 export const LIMIT_OPTIONS = [

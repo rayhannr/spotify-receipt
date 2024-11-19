@@ -1,15 +1,18 @@
 import { useAtom } from 'jotai'
-import { limitAtom, metricAtom, periodAtom, useIsArtistOrTrack } from '@/store'
-import { LIMIT_OPTIONS, METRIC_OPTIONS, PERIOD_OPTIONS } from '@/constants/receipt'
+import { limitAtom, metricAtom, timeRangeAtom, useIsArtistOrTrack } from '@/store'
+import { LIMIT_OPTIONS, METRIC_OPTIONS, Metrics, TIME_RANGE_OPTIONS } from '@/constants/receipt'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select'
 import { Tabs, TabsList, TabsTrigger } from './ui/tabs'
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from './ui/accordion'
+import { AlbumSelector } from './AlbumSelector'
 
 export const ReceiptGenerator = () => {
   const [metric, setMetric] = useAtom(metricAtom)
-  const [period, setPeriod] = useAtom(periodAtom)
+  const [timeRange, setTimeRange] = useAtom(timeRangeAtom)
   const [limit, setLimit] = useAtom(limitAtom)
+
   const isArtistOrTrack = useIsArtistOrTrack()
+  const isAlbum = metric === Metrics.album
 
   return (
     <Accordion type="single" collapsible defaultValue="customize" className="w-full">
@@ -32,18 +35,20 @@ export const ReceiptGenerator = () => {
             </Select>
           </div>
 
-          <div>
-            <label>Time Period</label>
-            <Tabs value={period} onValueChange={setPeriod} orientation="vertical">
-              <TabsList className="grid grid-cols-3">
-                {PERIOD_OPTIONS.map((option) => (
-                  <TabsTrigger value={option.value} key={option.value}>
-                    {option.label}
-                  </TabsTrigger>
-                ))}
-              </TabsList>
-            </Tabs>
-          </div>
+          {!isAlbum && (
+            <div>
+              <label>Time Range</label>
+              <Tabs value={timeRange} onValueChange={setTimeRange} orientation="vertical">
+                <TabsList className="grid grid-cols-3">
+                  {TIME_RANGE_OPTIONS.map((option) => (
+                    <TabsTrigger value={option.value} key={option.value}>
+                      {option.label}
+                    </TabsTrigger>
+                  ))}
+                </TabsList>
+              </Tabs>
+            </div>
+          )}
 
           {isArtistOrTrack && (
             <div>
@@ -57,6 +62,13 @@ export const ReceiptGenerator = () => {
                   ))}
                 </TabsList>
               </Tabs>
+            </div>
+          )}
+
+          {isAlbum && (
+            <div>
+              <label className="mt-6">Album</label>
+              <AlbumSelector />
             </div>
           )}
         </AccordionContent>

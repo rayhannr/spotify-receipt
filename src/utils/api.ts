@@ -1,4 +1,4 @@
-import { Artist, SpotifyApi } from '@spotify/web-api-ts-sdk'
+import { Album, Artist, SimplifiedAlbum, SpotifyApi } from '@spotify/web-api-ts-sdk'
 import { Env } from '@/constants/env'
 import { QueryClient, useQuery, UseQueryOptions } from 'react-query'
 import CurrentUserEndpoints from 'node_modules/@spotify/web-api-ts-sdk/dist/mjs/endpoints/CurrentUserEndpoints'
@@ -130,6 +130,29 @@ export const useStats = (timeRange: TimeRange, options?: UseQueryOptions<Receipt
 
   return useQuery({
     queryKey: ['stats', timeRange],
+    queryFn,
+    ...options,
+  })
+}
+
+export const useSearchItem = (query: string, options?: UseQueryOptions<SimplifiedAlbum[]>) => {
+  const queryFn = async () => {
+    const { albums } = await sdk.search(query, ['album'], undefined, 10)
+    return albums.items
+  }
+
+  return useQuery({
+    queryKey: ['albums', query],
+    queryFn,
+    ...options,
+  })
+}
+
+export const useAlbum = (id: string, options?: UseQueryOptions<Album>) => {
+  const queryFn = () => sdk.albums.get(id)
+
+  return useQuery({
+    queryKey: ['album', id],
     queryFn,
     ...options,
   })
