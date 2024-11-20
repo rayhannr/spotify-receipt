@@ -33,6 +33,11 @@ export const ReceiptImage = () => {
   const topGenres = useTopGenres(timeRange as TimeRange, { enabled: metric === Metrics.genres })
   const stats = useStats(timeRange as TimeRange, { enabled: metric === Metrics.stats })
   const album = useAlbum(globalAlbum, { enabled: !!globalAlbum && metric === Metrics.album })
+  const albumCover = useMemo(() => {
+    const images = album.data?.images.sort((a, b) => a.height - b.height) || []
+    const midIndex = Math.floor(images?.length / 2)
+    return images[midIndex]?.url
+  }, [album.data?.images])
 
   const receiptItems = useMemo(() => {
     switch (metric) {
@@ -83,9 +88,15 @@ export const ReceiptImage = () => {
 
   return (
     <div
-      style={{ backgroundImage: `url(${receiptBg})`, backgroundSize: 'cover' }}
-      className="w-full max-w-[340px] px-5 py-6 text-neutral-700 font-receipt uppercase text-lg"
+      style={{ backgroundImage: `url(${receiptBg})` }}
+      className="w-full max-w-[340px] px-5 py-6 text-neutral-700 font-receipt uppercase text-lg relative bg-cover"
     >
+      {isAlbum && albumCover && (
+        <div
+          style={{ backgroundImage: `url(${albumCover})` }}
+          className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-32 h-32 bg-cover bg-center opacity-10 grayscale"
+        />
+      )}
       <div className="text-center mb-2">
         <p className="font-semibold text-3xl leading-6">{(isAlbum && album.data?.name) || 'Spoticeipt'}</p>
         <p>{isAlbum ? album.data?.artists.map((artist) => artist.name).join(', ') : `${metricLabel} - ${timeRangeLabel}`}</p>

@@ -138,7 +138,7 @@ export const useStats = (timeRange: TimeRange, options?: UseQueryOptions<Receipt
 export const useSearchItem = (query: string, options?: UseQueryOptions<SimplifiedAlbum[]>) => {
   const queryFn = async () => {
     const { albums } = await sdk.search(query, ['album'], undefined, 10)
-    return albums.items
+    return albums.items.filter(Boolean)
   }
 
   return useQuery({
