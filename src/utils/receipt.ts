@@ -1,4 +1,5 @@
 import { Artist, AudioFeatures, Track } from '@spotify/web-api-ts-sdk'
+import { UAParser } from 'ua-parser-js'
 
 export const isArtist = (item: Artist | Track): item is Artist => item.type === 'artist'
 
@@ -46,3 +47,19 @@ export const getAverage = (values: number[]) => (values.reduce((acc, curr) => ac
 
 export const getAverageFeature = (features: AudioFeatures[], key: keyof AudioFeatures, percent?: boolean) =>
   getAverage(features.map((feature) => (percent ? +feature[key] * 100 : +feature[key])))
+
+const webShareApiDeviceTypes: string[] = ['mobile', 'smarttv', 'wearable']
+const parser = new UAParser()
+const browser = parser.getBrowser()
+const device = parser.getDevice()
+
+export const attemptShare = (shareData: object) => {
+  return (
+    // Deliberately exclude Firefox Mobile, because its Web Share API isn't working correctly
+    browser.name?.toUpperCase().indexOf('FIREFOX') === -1 &&
+    webShareApiDeviceTypes.indexOf(device.type ?? '') !== -1 &&
+    navigator.canShare &&
+    navigator.canShare(shareData) &&
+    navigator.share
+  )
+}

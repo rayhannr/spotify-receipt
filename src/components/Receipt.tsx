@@ -31,7 +31,7 @@ export const Receipt = () => {
             <div className="w-full lg:w-5/12">
               <ReceiptGenerator />
             </div>
-            <div className="w-full lg:w-auto flex-1 flex justify-center">
+            <div className="w-full lg:w-auto flex-1 flex flex-col items-center gap-3">
               <ReceiptImage />
             </div>
           </section>
