@@ -5,6 +5,7 @@ import { Title } from './Title'
 import { Button } from './ui/button'
 import { ReceiptGenerator } from './ReceiptGenerator'
 import { ReceiptImage } from './ReceiptImage'
+import { Information } from './Information'
 
 export const Receipt = () => {
   const user = useAtomValue(userAtom)
@@ -30,6 +31,7 @@ export const Receipt = () => {
           <section className="flex flex-wrap gap-6 mt-4">
             <div className="w-full lg:w-5/12">
               <ReceiptGenerator />
+              <Information />
             </div>
             <div className="w-full lg:w-auto flex-1 flex flex-col items-center gap-3">
               <ReceiptImage />

@@ -43,10 +43,16 @@ export const getYearDifference = (date1: Date, date2: Date) => {
   return diffInMilliseconds / millisecondsInYear
 }
 
-export const getAverage = (values: number[]) => (values.reduce((acc, curr) => acc + curr, 0) / values.length).toFixed(2)
+export const getAverage = (values: number[], toFixed = 2) => {
+  const average = values.reduce((acc, curr) => acc + curr, 0) / values.length
+  return average.toFixed(toFixed)
+}
 
 export const getAverageFeature = (features: AudioFeatures[], key: keyof AudioFeatures, percent?: boolean) =>
-  getAverage(features.map((feature) => (percent ? +feature[key] * 100 : +feature[key])))
+  getAverage(
+    features.map((feature) => (percent ? +feature[key] * 100 : +feature[key])),
+    key === 'instrumentalness' ? 6 : 2
+  )
 
 const webShareApiDeviceTypes: string[] = ['mobile', 'smarttv', 'wearable']
 const parser = new UAParser()

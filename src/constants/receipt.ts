@@ -45,9 +45,9 @@ export const FEATURE_ITEMS: Feature[] = [
   { key: 'danceability', percent: true },
   { key: 'energy', percent: true },
   { key: 'valence', name: 'happiness', percent: true },
-  { key: 'instrumentalness', percent: true },
+  { key: 'instrumentalness' },
   { key: 'liveness', percent: true },
-  { key: 'loudness' },
+  { key: 'loudness', unit: 'dB' },
   { key: 'speechiness', percent: true },
   { key: 'tempo', unit: 'bpm' },
 ]
