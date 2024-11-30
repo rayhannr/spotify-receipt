@@ -1,5 +1,5 @@
 export const Env = {
   clientId: process.env.CLIENT_ID || '',
-  clientSecret: process.env.CLIENT_SECRET || '',
+  baseURL: process.env.BACKEND_BASE_URL || '',
   redirectUri: process.env.REDIRECT_URI || '',
 }

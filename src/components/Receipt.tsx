@@ -6,6 +6,8 @@ import { Button } from './ui/button'
 import { ReceiptGenerator } from './ReceiptGenerator'
 import { ReceiptImage } from './ReceiptImage'
 import { Information } from './Information'
+import { Accordion } from './ui/accordion'
+import { MusicTaste } from './MusicTaste'
 
 export const Receipt = () => {
   const user = useAtomValue(userAtom)
@@ -24,14 +26,17 @@ export const Receipt = () => {
             <img src={user.images[0].url} className="w-7 h-7 rounded-[50%]" />
             Hi, {user.display_name}
           </h1>
-          <span className="text-muted-foreground">Not you?</span>{' '}
+          <span className="text-muted-foreground text-sm">Not you?</span>{' '}
           <Button variant="link" onClick={logout} className="p-0 h-auto">
             Logout
           </Button>
-          <section className="flex flex-wrap gap-6 mt-4">
+          <section className="flex flex-wrap gap-6">
             <div className="w-full lg:w-5/12">
-              <ReceiptGenerator />
-              <Information />
+              <Accordion type="multiple" defaultValue={['customize', 'taste']} className="w-full">
+                <ReceiptGenerator />
+                <MusicTaste />
+                <Information />
+              </Accordion>
             </div>
             <div className="w-full lg:w-auto flex-1 flex flex-col items-center gap-3">
               <ReceiptImage />

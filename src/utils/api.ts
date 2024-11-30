@@ -1,6 +1,8 @@
 import { Album, Artist, SimplifiedAlbum, SpotifyApi } from '@spotify/web-api-ts-sdk'
-import { Env } from '@/constants/env'
 import { QueryClient, useQuery, UseQueryOptions } from 'react-query'
+import axios from 'axios'
+import qs from 'query-string'
+import { Env } from '@/constants/env'
 import CurrentUserEndpoints from 'node_modules/@spotify/web-api-ts-sdk/dist/mjs/endpoints/CurrentUserEndpoints'
 import { formatDuration, getAverage, getAverageFeature, getPercentage, getYearDifference, isArtist } from './receipt'
 import { FEATURE_ITEMS } from '@/constants/receipt'
@@ -153,6 +155,23 @@ export const useAlbum = (id: string, options?: UseQueryOptions<Album>) => {
 
   return useQuery({
     queryKey: ['album', id],
+    queryFn,
+    ...options,
+  })
+}
+
+export const useMusicTaste = (tracks: string[], type: string, options?: UseQueryOptions<string>) => {
+  const queryFn = async () => {
+    const res = await axios.get<{ taste: string }>('/music-taste', {
+      baseURL: Env.baseURL,
+      params: { tracks, type },
+      paramsSerializer: (params) => qs.stringify(params),
+    })
+    return res.data.taste
+  }
+
+  return useQuery({
+    queryKey: ['musicTaste', tracks, type],
     queryFn,
     ...options,
   })

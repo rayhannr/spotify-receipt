@@ -1,5 +1,5 @@
 import { useAtomValue } from 'jotai'
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from './ui/accordion'
+import { AccordionContent, AccordionItem, AccordionTrigger } from './ui/accordion'
 import { metricAtom } from '@/store'
 import { Metrics } from '@/constants/receipt'
 
@@ -56,35 +56,33 @@ export const Information = () => {
   if (metric === Metrics.tracks || metric === Metrics.album) return null
 
   return (
-    <Accordion type="single" collapsible className="w-full">
-      <AccordionItem value="info">
-        <AccordionTrigger>Information</AccordionTrigger>
-        <AccordionContent className="max-h-[340px] pr-2 overflow-y-auto">
-          {metric === Metrics.artists && (
-            <>
-              <strong>AMT</strong> — The popularity of the artist. The value will be between 0 and 100, with 100 being the most
-              popular. The artist's popularity is calculated from the popularity of all the artist's tracks.
-            </>
-          )}
+    <AccordionItem value="info">
+      <AccordionTrigger>Information</AccordionTrigger>
+      <AccordionContent className="max-h-[340px] pr-2 overflow-y-auto">
+        {metric === Metrics.artists && (
+          <>
+            <strong>AMT</strong> — The popularity of the artist. The value will be between 0 and 100, with 100 being the most
+            popular. The artist's popularity is calculated from the popularity of all the artist's tracks.
+          </>
+        )}
 
-          {metric === Metrics.genres && (
-            <>
-              <strong>AMT</strong> — The % of your top artists within a specific genre. For example, 25% means 1 in 4 of your
-              top artists belong to that genre. An artist may belong to multiple genres.
-            </>
-          )}
+        {metric === Metrics.genres && (
+          <>
+            <strong>AMT</strong> — The % of your top artists within a specific genre. For example, 25% means 1 in 4 of your top
+            artists belong to that genre. An artist may belong to multiple genres.
+          </>
+        )}
 
-          {metric === Metrics.stats && (
-            <div className="flex flex-col gap-3">
-              {stats.map((stat) => (
-                <p key={stat.title}>
-                  <strong>{stat.title}</strong> — {stat.desc}
-                </p>
-              ))}
-            </div>
-          )}
-        </AccordionContent>
-      </AccordionItem>
-    </Accordion>
+        {metric === Metrics.stats && (
+          <div className="flex flex-col gap-3">
+            {stats.map((stat) => (
+              <p key={stat.title}>
+                <strong>{stat.title}</strong> — {stat.desc}
+              </p>
+            ))}
+          </div>
+        )}
+      </AccordionContent>
+    </AccordionItem>
   )
 }
