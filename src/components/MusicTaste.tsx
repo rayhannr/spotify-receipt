@@ -1,6 +1,7 @@
 import { useMusicTaste, useTopItems } from '@/utils/api'
 import { AccordionContent, AccordionItem, AccordionTrigger } from './ui/accordion'
 import { useState } from 'react'
+import ReactMarkdown from 'react-markdown'
 import { Tabs, TabsList, TabsTrigger } from './ui/tabs'
 
 export const MusicTaste = () => {
@@ -8,6 +9,12 @@ export const MusicTaste = () => {
   const topTracks = data?.map((track) => track.name)
   const [type, setType] = useState('compliment')
   const musicTaste = useMusicTaste(topTracks || [], type, { enabled: !!topTracks?.length })
+
+  const renderContent = () => {
+    if (musicTaste.error) return <p>Failed to generate your music taste</p>
+    if (musicTaste.isFetching) return <p>Generating your music taste...</p>
+    return <ReactMarkdown>{musicTaste.data}</ReactMarkdown>
+  }
 
   return (
     <AccordionItem value="taste">
@@ -23,8 +30,7 @@ export const MusicTaste = () => {
             ))}
           </TabsList>
         </Tabs>
-        {musicTaste.isError && <p>Failed to generate your music taste</p>}
-        {!musicTaste.isError && <p>{musicTaste.isFetching ? 'Generating your music taste...' : musicTaste.data}</p>}
+        {renderContent()}
       </AccordionContent>
     </AccordionItem>
   )
